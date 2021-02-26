@@ -1,10 +1,10 @@
+env:
+  PULUMI_WORKING_DIRECTORY: [[/www]]" 
 name: Pulumi
 on:
   push:
     branches:
       - master
-env:
-	PULUMI_WORKING_DIRECTORY: [[/www]]" 
 jobs:
   up:
     name: Update
