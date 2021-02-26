@@ -6,7 +6,7 @@ const mime = require("mime");
 const s3folder = require("./s3folder.js");
 
 // Create an instance of the S3Folder component
-let folder = new s3folder.S3Folder("s3-website-bucket", "/home/emocry/myrepo/alpagatsby/gatsby-contentful-portfolio/gatsbysrc/gatsby-contentful-portfolio/public");
+let folder = new s3folder.S3Folder("s3-website-bucket", "/home/emocry/myrepo/alpagatsby/gatsbysrc/public");
 
 // Export output property of `folder` as a stack output
 exports.bucketName = folder.bucketName;
