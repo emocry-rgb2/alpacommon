@@ -18,7 +18,7 @@ let siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
-let siteDir = "gatsbysrc/public"; // directory for content files
+let siteDir = "public"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`
 for (let item of require("fs").readdirSync(siteDir)) {
