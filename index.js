@@ -6,7 +6,7 @@ const mime = require("mime");
 const s3folder = require("./s3folder.js");
 
 // Create an instance of the S3Folder component
-let folder = new s3folder.S3Folder("s3-website-bucket", "./public");
+let folder = new s3folder.S3Folder("s3-website-bucket", "/home/emocry/myrepo/alpagatsby/gatsby-contentful-portfolio/gatsbysrc/gatsby-contentful-portfolio/public");
 
 // Export output property of `folder` as a stack output
 exports.bucketName = folder.bucketName;
@@ -18,7 +18,7 @@ let siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
-let siteDir = "/home/emocry/myrepo/alpagatsby/gatsby-contentful-portfolio/gatsbysrc/gatsby-contentful-portfolio/public/"; // directory for content files
+let siteDir = "public"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`
 for (let item of require("fs").readdirSync(siteDir)) {
@@ -56,3 +56,4 @@ let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
 // Stack exports
 exports.bucketName = siteBucket.bucket;
 exports.websiteUrl = siteBucket.websiteEndpoint;
+
