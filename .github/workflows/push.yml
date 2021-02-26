@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 1
+          fetch-depth: 3
+          path: ${{ github.workspace }}/gatsbysrc/public
       - uses: pulumi/actions@v1
         with:
-          path: ${{ github.workspace }}/gatsbysrc/www
           command: up
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
