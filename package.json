@@ -1,0 +1,10 @@
+{
+    "name": "aplatw",
+    "main": "index.js",
+    "dependencies": {
+        "@pulumi/aws": "^3.25.1",
+        "@pulumi/awsx": "^0.24.0",
+        "@pulumi/pulumi": "^2.0.0",
+        "contentful": "^8.1.7"
+    }
+}
