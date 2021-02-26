@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update path
-        run: echo "${{ github.workspace }}/www" >> $GITHUB_PATH
+        run: echo "${{ github.workspace }}/public" >> $GITHUB_PATH
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
