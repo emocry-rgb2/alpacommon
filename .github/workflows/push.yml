@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: emocry-rgb2/gatsby-contetnful-portfolio@master
+      - uses: emocry-rgb2/gatsby-contentful-portfolio@master
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
