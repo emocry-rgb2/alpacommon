@@ -12,6 +12,8 @@ jobs:
         run: |
           aws configure set preview.cloudfront true
           aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        env: 
+          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
       - uses: actions/checkout@master
       - uses: emocry-rgb2/gatsby-contentful-portfolio@master
         with:
