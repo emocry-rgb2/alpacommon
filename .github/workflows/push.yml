@@ -12,9 +12,10 @@ jobs:
       - uses: awact/cloudfront-action@master
         env:
           SOURCE_PATH: './public'
-          AWS_REGION: 'us-east-1'
+          AWS_REGION: 'eu-west-3'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          DISTRIBUTION_ID: ${{ secrets.DISTRIBUTION_ID }}
       - uses: actions/checkout@master
       - uses: emocry-rgb2/gatsby-contentful-portfolio@master
         with:
