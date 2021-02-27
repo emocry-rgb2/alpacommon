@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: awact/cloudfront-action@master
         env:
-          SOURCE_PATH: './public'
+          SOURCE_PATH: 'www/public'
           AWS_REGION: 'eu-west-3'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
