@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: s3-sync-action@master
         with:
-          command: aws s3 sync s3://s3-website-bucket-e4f21ab ~/
+          command: aws s3 sync ~/myrepo/123/ s3://s3-website-bucket-e4f21ab
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
