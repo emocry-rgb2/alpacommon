@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Copy files to the test website with the AWS CLI
-        run: |
-          aws s3 sync s3://s3-website-bucket-e4f21ab ~/.
+        with:
+          command: aws s3 sync s3://s3-website-bucket-e4f21ab ~/
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
