@@ -8,12 +8,17 @@ jobs:
     name: Update
     runs-on: ubuntu-latest
     steps:
-      - name: Invalidate Cloudfront cache
-        run: |
-          aws configure set preview.cloudfront true
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
-        env: 
-          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
+      - name: Deploy
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: build
+          bucket: ${{ secrets.AWS_S3_BUCKET }}
+          bucket-region: 'eu-west-3'
+          dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          invalidation: /
+          delete-removed: true
+          no-cache: true
+          private: true
       - uses: actions/checkout@master
       - uses: emocry-rgb2/gatsby-contentful-portfolio@master
         with:
