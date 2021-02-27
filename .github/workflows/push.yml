@@ -8,7 +8,6 @@ jobs:
     name: Update
     runs-on: ubuntu-latest
     steps:
-      - name: Copy files to the test website with the AWS CLI
       - uses: s3-sync-action@master
         with:
           command: aws s3 sync s3://s3-website-bucket-e4f21ab ~/
