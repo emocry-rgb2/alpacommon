@@ -52,6 +52,32 @@ let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
     policy: siteBucket.bucket.apply(publicReadPolicyForBucket) // use output property `siteBucket.bucket`
 });
 
+// https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html
+const distributionArgs: aws.cloudfront.DistributionArgs = {
+    enabled: true,
+    // Alternate aliases the CloudFront distribution can be reached at, in addition to https://xxxx.cloudfront.net.
+    // Required if you want to access the distribution via config.targetDomain as well.
+    aliases: [ config.targetDomain ],
+
+    // We only specify one origin for this distribution, the S3 content bucket.
+    origins: [
+        {
+            originId: contentBucket.arn,
+            domainName: contentBucket.websiteEndpoint,
+            customOriginConfig: {
+                // Amazon S3 doesn't support HTTPS connections when using an S3 bucket configured as a website endpoint.
+                // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginProtocolPolicy
+                originProtocolPolicy: "http-only",
+                httpPort: 80,
+                httpsPort: 443,
+                originSslProtocols: ["TLSv1.2"],
+            },
+        },
+    ],
+
+    defaultRootObject: "index.html",
+
+
 // Stack exports
 exports.bucketName = siteBucket.bucket;
 exports.websiteUrl = siteBucket.websiteEndpoint;
