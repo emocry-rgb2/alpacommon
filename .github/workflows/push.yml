@@ -8,6 +8,11 @@ jobs:
     name: Update
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: npm ci
+      - run: npm run build
       - uses: actions/checkout@master
       - uses: emocry-rgb2/alpacommon@master
         with:
