@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-        name: build
-      - run: | 
+      - name: build
+        run: | 
           cd $GITHUB_WORKSPACE/www
           gatsby build
           npm install   
