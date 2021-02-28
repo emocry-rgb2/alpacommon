@@ -2,7 +2,7 @@ name: Pulumi
 on:
   push:
     branches:
-      - master
+      - release
 jobs:
   up:
     name: Update
@@ -20,7 +20,7 @@ jobs:
           no-cache: true
           private: true
       - uses: actions/checkout@master
-      - uses: emocry-rgb2/gatsby-contentful-portfolio@master
+      - uses: emocry-rgb2/alpacommon@master
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
