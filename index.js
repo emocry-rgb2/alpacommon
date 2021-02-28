@@ -52,30 +52,175 @@ let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
     policy: siteBucket.bucket.apply(publicReadPolicyForBucket) // use output property `siteBucket.bucket`
 });
 
-// https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html
-const distributionArgs: aws.cloudfront.DistributionArgs = {
-    enabled: true,
-    // Alternate aliases the CloudFront distribution can be reached at, in addition to https://xxxx.cloudfront.net.
-    // Required if you want to access the distribution via config.targetDomain as well.
-    aliases: [ config.targetDomain ],
+using Pulumi;
+using Aws = Pulumi.Aws;
 
-    // We only specify one origin for this distribution, the S3 content bucket.
-    origins: [
+class MyStack : Stack
+{
+    public MyStack()
+    {
+        var bucket = new Aws.S3.Bucket("bucket", new Aws.S3.BucketArgs
         {
-            originId: contentBucket.arn,
-            domainName: contentBucket.websiteEndpoint,
-            customOriginConfig: {
-                // Amazon S3 doesn't support HTTPS connections when using an S3 bucket configured as a website endpoint.
-                // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginProtocolPolicy
-                originProtocolPolicy: "http-only",
-                httpPort: 80,
-                httpsPort: 443,
-                originSslProtocols: ["TLSv1.2"],
+            Acl = "private",
+            Tags = 
+            {
+                { "Name", "My bucket" },
             },
-        },
-    ],
+        });
+        var s3OriginId = "myS3Origin";
+        var s3Distribution = new Aws.CloudFront.Distribution("s3Distribution", new Aws.CloudFront.DistributionArgs
+        {
+            Origins = 
+            {
+                new Aws.CloudFront.Inputs.DistributionOriginArgs
+                {
+                    DomainName = bucket.BucketRegionalDomainName,
+                    OriginId = s3OriginId,
+                    S3OriginConfig = new Aws.CloudFront.Inputs.DistributionOriginS3OriginConfigArgs
+                    {
+                        OriginAccessIdentity = "origin-access-identity/cloudfront/ABCDEFG1234567",
+                    },
+                },
+            },
+            Enabled = true,
+            IsIpv6Enabled = true,
+            Comment = "Some comment",
+            DefaultRootObject = "index.html",
+            LoggingConfig = new Aws.CloudFront.Inputs.DistributionLoggingConfigArgs
+            {
+                IncludeCookies = false,
+                Bucket = "mylogs.s3.amazonaws.com",
+                Prefix = "myprefix",
+            },
+            Aliases = 
+            {
+                "mysite.example.com",
+                "yoursite.example.com",
+            },
+            DefaultCacheBehavior = new Aws.CloudFront.Inputs.DistributionDefaultCacheBehaviorArgs
+            {
+                AllowedMethods = 
+                {
+                    "DELETE",
+                    "GET",
+                    "HEAD",
+                    "OPTIONS",
+                    "PATCH",
+                    "POST",
+                    "PUT",
+                },
+                CachedMethods = 
+                {
+                    "GET",
+                    "HEAD",
+                },
+                TargetOriginId = s3OriginId,
+                ForwardedValues = new Aws.CloudFront.Inputs.DistributionDefaultCacheBehaviorForwardedValuesArgs
+                {
+                    QueryString = false,
+                    Cookies = new Aws.CloudFront.Inputs.DistributionDefaultCacheBehaviorForwardedValuesCookiesArgs
+                    {
+                        Forward = "none",
+                    },
+                },
+                ViewerProtocolPolicy = "allow-all",
+                MinTtl = 0,
+                DefaultTtl = 3600,
+                MaxTtl = 86400,
+            },
+            OrderedCacheBehaviors = 
+            {
+                new Aws.CloudFront.Inputs.DistributionOrderedCacheBehaviorArgs
+                {
+                    PathPattern = "/content/immutable/*",
+                    AllowedMethods = 
+                    {
+                        "GET",
+                        "HEAD",
+                        "OPTIONS",
+                    },
+                    CachedMethods = 
+                    {
+                        "GET",
+                        "HEAD",
+                        "OPTIONS",
+                    },
+                    TargetOriginId = s3OriginId,
+                    ForwardedValues = new Aws.CloudFront.Inputs.DistributionOrderedCacheBehaviorForwardedValuesArgs
+                    {
+                        QueryString = false,
+                        Headers = 
+                        {
+                            "Origin",
+                        },
+                        Cookies = new Aws.CloudFront.Inputs.DistributionOrderedCacheBehaviorForwardedValuesCookiesArgs
+                        {
+                            Forward = "none",
+                        },
+                    },
+                    MinTtl = 0,
+                    DefaultTtl = 86400,
+                    MaxTtl = 31536000,
+                    Compress = true,
+                    ViewerProtocolPolicy = "redirect-to-https",
+                },
+                new Aws.CloudFront.Inputs.DistributionOrderedCacheBehaviorArgs
+                {
+                    PathPattern = "/content/*",
+                    AllowedMethods = 
+                    {
+                        "GET",
+                        "HEAD",
+                        "OPTIONS",
+                    },
+                    CachedMethods = 
+                    {
+                        "GET",
+                        "HEAD",
+                    },
+                    TargetOriginId = s3OriginId,
+                    ForwardedValues = new Aws.CloudFront.Inputs.DistributionOrderedCacheBehaviorForwardedValuesArgs
+                    {
+                        QueryString = false,
+                        Cookies = new Aws.CloudFront.Inputs.DistributionOrderedCacheBehaviorForwardedValuesCookiesArgs
+                        {
+                            Forward = "none",
+                        },
+                    },
+                    MinTtl = 0,
+                    DefaultTtl = 3600,
+                    MaxTtl = 86400,
+                    Compress = true,
+                    ViewerProtocolPolicy = "redirect-to-https",
+                },
+            },
+            PriceClass = "PriceClass_200",
+            Restrictions = new Aws.CloudFront.Inputs.DistributionRestrictionsArgs
+            {
+                GeoRestriction = new Aws.CloudFront.Inputs.DistributionRestrictionsGeoRestrictionArgs
+                {
+                    RestrictionType = "whitelist",
+                    Locations = 
+                    {
+                        "US",
+                        "CA",
+                        "GB",
+                        "DE",
+                    },
+                },
+            },
+            Tags = 
+            {
+                { "Environment", "production" },
+            },
+            ViewerCertificate = new Aws.CloudFront.Inputs.DistributionViewerCertificateArgs
+            {
+                CloudfrontDefaultCertificate = true,
+            },
+        });
+    }
 
-    defaultRootObject: "index.html",
+}
 
 // Stack exports
 exports.bucketName = siteBucket.bucket;
