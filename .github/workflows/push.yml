@@ -11,8 +11,8 @@ jobs:
       - uses: actions/checkout@master
       - name: build
         run: | 
-          cd $GITHUB_WORKSPACE/www
-          echo sdsdsdsds   
+          cd $GITHUB_WORKSPACE/www && gatsby build
+          echo $ls -la   
       - uses: actions/checkout@master
       - uses: emocry-rgb2/alpacommon@master
         with:
