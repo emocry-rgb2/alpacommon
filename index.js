@@ -60,7 +60,7 @@ const s3Distribution = new aws.cloudfront.Distribution("s3Distribution", {
         domainName: bucket.bucketRegionalDomainName,
         originId: s3OriginId,
         s3OriginConfig: {
-            originAccessIdentity: "origin-access-identity/cloudfront/S3-s3-website-bucket-e4f21ab",
+            originAccessIdentity: "S3-s3-website-bucket-e4f21ab",
         },
     }],
     enabled: true,

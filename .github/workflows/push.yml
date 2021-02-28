@@ -12,7 +12,8 @@ jobs:
         name: build
       - run: | 
           cd $GITHUB_WORKSPACE/www
-          npm install
+          gatsby build
+          npm install   
       - uses: actions/checkout@master
       - uses: emocry-rgb2/alpacommon@master
         with:
