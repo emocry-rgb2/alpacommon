@@ -10,8 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
         name: build
-      - run: npm install
-      - run: gatsby build
+      - run: | 
+          cd $GITHUB_WORKSPACE/www
+          npm install
       - uses: actions/checkout@master
       - uses: emocry-rgb2/alpacommon@master
         with:
