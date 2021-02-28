@@ -13,6 +13,8 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm run build
+        env:
+          SOURCE_DIR: 'www'
       - uses: actions/checkout@master
       - uses: emocry-rgb2/alpacommon@master
         with:
