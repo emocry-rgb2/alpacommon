@@ -8,17 +8,6 @@ jobs:
     name: Update
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy
-        uses: reggionick/s3-deploy@v3
-        with:
-          folder: public
-          bucket: ${{ secrets.AWS_S3_BUCKET }}
-          bucket-region: 'eu-west-3'
-          dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-          invalidation: /
-          delete-removed: true
-          no-cache: true
-          private: true
       - uses: actions/checkout@master
       - uses: emocry-rgb2/alpacommon@master
         with:
